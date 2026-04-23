@@ -15,6 +15,7 @@ import {
   GraduationCap,
   HeartPulse,
   Wrench,
+  MapPin,
 } from 'lucide-react';
 
 const categoryIcons: Record<string, React.ReactNode> = {
@@ -54,14 +55,14 @@ export default function HomePage() {
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-1.5 mb-6">
               <TrendingUp className="w-4 h-4 text-blue-200" />
-              <span className="text-sm text-blue-100 font-medium">{jobCount}+ active job listings</span>
+              <span className="text-sm text-blue-100 font-medium">{jobCount}+ active job listings worldwide</span>
             </div>
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white leading-tight mb-6">
               Find Your<br />
               <span className="text-blue-200">Dream Job</span>
             </h1>
             <p className="text-lg text-blue-100 mb-10 max-w-xl leading-relaxed">
-              Discover opportunities that match your skills and passion. Connect with top employers and take the next step in your career.
+              Discover opportunities across the globe that match your skills and passion. Connect with top employers and take the next step in your career.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
@@ -90,7 +91,7 @@ export default function HomePage() {
             {[
               { icon: <Building2 className="w-5 h-5" />, value: '500+', label: 'Companies' },
               { icon: <Users className="w-5 h-5" />, value: '10K+', label: 'Job Seekers' },
-              { icon: <Globe className="w-5 h-5" />, value: '50+', label: 'Locations' },
+              { icon: <Globe className="w-5 h-5" />, value: '50+', label: 'Countries' },
               { icon: <TrendingUp className="w-5 h-5" />, value: '95%', label: 'Success Rate' },
             ].map((stat) => (
               <div key={stat.label} className="text-center">
@@ -135,7 +136,7 @@ export default function HomePage() {
           <div className="flex items-end justify-between mb-10">
             <div>
               <h2 className="text-3xl font-bold text-gray-900 mb-2">Featured Jobs</h2>
-              <p className="text-gray-500">Latest opportunities from top employers</p>
+              <p className="text-gray-500">Latest opportunities from employers around the world</p>
             </div>
             <Link
               to="/jobs"
@@ -164,9 +165,18 @@ export default function HomePage() {
                   {job.title}
                 </h3>
                 <p className="text-sm text-gray-500 mb-3">{job.company}</p>
-                <div className="flex items-center gap-3 text-xs text-gray-400">
-                  <span>{job.location}</span>
+                <div className="flex flex-wrap items-center gap-2 text-xs text-gray-400">
+                  <span className="inline-flex items-center gap-1">
+                    <MapPin className="w-3 h-3" />
+                    {job.location}
+                  </span>
                   <span className="w-1 h-1 bg-gray-300 rounded-full" />
+                  <span className="inline-flex items-center gap-1">
+                    <Globe className="w-3 h-3" />
+                    {job.country}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 mt-2 text-xs text-gray-400">
                   <span>{job.category}</span>
                 </div>
                 {job.salary_max > 0 && (
@@ -196,7 +206,7 @@ export default function HomePage() {
             Ready to hire top talent?
           </h2>
           <p className="text-blue-100 max-w-lg mx-auto mb-8 leading-relaxed">
-            Post your job listing and reach thousands of qualified professionals looking for their next opportunity.
+            Post your job listing and reach thousands of qualified professionals worldwide.
           </p>
           <Link
             to="/post-job"

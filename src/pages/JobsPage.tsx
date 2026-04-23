@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { Job, CATEGORIES } from '../lib/types';
-import { Search, MapPin, Briefcase, X, SlidersHorizontal } from 'lucide-react';
+import { Job, CATEGORIES, JOB_TYPES, COUNTRIES } from '../lib/types';
+import { Search, MapPin, Briefcase, X, SlidersHorizontal, Globe, Clock } from 'lucide-react';
 
 export default function JobsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -10,6 +10,8 @@ export default function JobsPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState(searchParams.get('q') || '');
   const [category, setCategory] = useState(searchParams.get('category') || '');
+  const [country, setCountry] = useState(searchParams.get('country') || '');
+  const [jobType, setJobType] = useState(searchParams.get('type') || '');
   const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
@@ -19,6 +21,12 @@ export default function JobsPage() {
 
       const cat = searchParams.get('category');
       if (cat) query = query.eq('category', cat);
+
+      const c = searchParams.get('country');
+      if (c) query = query.eq('country', c);
+
+      const t = searchParams.get('type');
+      if (t) query = query.eq('type', t);
 
       const { data } = await query;
       let results = data || [];
@@ -58,13 +66,33 @@ export default function JobsPage() {
     setSearchParams(params);
   };
 
+  const handleCountryChange = (c: string) => {
+    const params = new URLSearchParams(searchParams);
+    const newCountry = c === country ? '' : c;
+    if (newCountry) params.set('country', newCountry);
+    else params.delete('country');
+    setCountry(newCountry);
+    setSearchParams(params);
+  };
+
+  const handleJobTypeChange = (t: string) => {
+    const params = new URLSearchParams(searchParams);
+    const newType = t === jobType ? '' : t;
+    if (newType) params.set('type', newType);
+    else params.delete('type');
+    setJobType(newType);
+    setSearchParams(params);
+  };
+
   const clearFilters = () => {
     setSearch('');
     setCategory('');
+    setCountry('');
+    setJobType('');
     setSearchParams({});
   };
 
-  const hasFilters = searchParams.get('q') || searchParams.get('category');
+  const hasFilters = searchParams.get('q') || searchParams.get('category') || searchParams.get('country') || searchParams.get('type');
 
   return (
     <div className="bg-gray-50 min-h-screen">
@@ -72,7 +100,7 @@ export default function JobsPage() {
       <div className="bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Find Jobs</h1>
-          <p className="text-gray-500">Browse {jobs.length} available positions</p>
+          <p className="text-gray-500">Browse {jobs.length} available positions worldwide</p>
 
           <form onSubmit={handleSearch} className="mt-6 flex gap-3">
             <div className="relative flex-1">
@@ -102,32 +130,89 @@ export default function JobsPage() {
             </button>
           </form>
 
-          {/* Category filters */}
-          <div className={`mt-4 ${showFilters ? 'block' : 'hidden'} md:block`}>
-            <div className="flex flex-wrap items-center gap-2">
-              {CATEGORIES.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => handleCategoryChange(cat)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    category === cat
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-50 text-gray-600 hover:bg-gray-100 border border-gray-200'
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
-              {hasFilters && (
-                <button
-                  onClick={clearFilters}
-                  className="inline-flex items-center gap-1 px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                >
-                  <X className="w-4 h-4" />
-                  Clear
-                </button>
-              )}
+          {/* Filters */}
+          <div className={`mt-5 ${showFilters ? 'block' : 'hidden'} md:block space-y-4`}>
+            {/* Category */}
+            <div>
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Category</p>
+              <div className="flex flex-wrap items-center gap-2">
+                {CATEGORIES.map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => handleCategoryChange(cat)}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      category === cat
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-gray-50 text-gray-600 hover:bg-gray-100 border border-gray-200'
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
             </div>
+
+            {/* Job Type */}
+            <div>
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Job Type</p>
+              <div className="flex flex-wrap items-center gap-2">
+                {JOB_TYPES.map((t) => (
+                  <button
+                    key={t}
+                    onClick={() => handleJobTypeChange(t)}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      jobType === t
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-gray-50 text-gray-600 hover:bg-gray-100 border border-gray-200'
+                    }`}
+                  >
+                    {t}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Country */}
+            <div>
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Country</p>
+              <div className="flex flex-wrap items-center gap-2">
+                {COUNTRIES.slice(0, 12).map((c) => (
+                  <button
+                    key={c}
+                    onClick={() => handleCountryChange(c)}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      country === c
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-gray-50 text-gray-600 hover:bg-gray-100 border border-gray-200'
+                    }`}
+                  >
+                    {c}
+                  </button>
+                ))}
+                <select
+                  value={country && !COUNTRIES.slice(0, 12).includes(country as any) ? country : ''}
+                  onChange={(e) => {
+                    if (e.target.value) handleCountryChange(e.target.value);
+                  }}
+                  className="px-4 py-2 rounded-lg text-sm font-medium bg-gray-50 text-gray-600 hover:bg-gray-100 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">More countries...</option>
+                  {COUNTRIES.slice(12).map((c) => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {hasFilters && (
+              <button
+                onClick={clearFilters}
+                className="inline-flex items-center gap-1 px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+              >
+                <X className="w-4 h-4" />
+                Clear all filters
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -173,9 +258,17 @@ export default function JobsPage() {
                         {job.location}
                       </span>
                       <span className="w-1 h-1 bg-gray-300 rounded-full" />
+                      <span className="inline-flex items-center gap-1">
+                        <Globe className="w-3.5 h-3.5" />
+                        {job.country}
+                      </span>
+                      <span className="w-1 h-1 bg-gray-300 rounded-full" />
                       <span>{job.category}</span>
                       <span className="w-1 h-1 bg-gray-300 rounded-full" />
-                      <span>{job.type}</span>
+                      <span className="inline-flex items-center gap-1">
+                        <Clock className="w-3.5 h-3.5" />
+                        {job.type}
+                      </span>
                     </div>
                   </div>
                   <div className="flex sm:flex-col items-center sm:items-end gap-2 sm:gap-1">

@@ -12,6 +12,7 @@ import {
   Mail,
   Share2,
   CheckCircle2,
+  Globe,
 } from 'lucide-react';
 
 export default function JobDetailPage() {
@@ -79,6 +80,10 @@ export default function JobDetailPage() {
                 <span className="inline-flex items-center gap-1.5">
                   <MapPin className="w-4 h-4 text-gray-400" />
                   {job.location}
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                  <Globe className="w-4 h-4 text-gray-400" />
+                  {job.country}
                 </span>
                 <span className="inline-flex items-center gap-1.5">
                   <Briefcase className="w-4 h-4 text-gray-400" />
@@ -165,6 +170,15 @@ export default function JobDetailPage() {
                   <div>
                     <p className="text-xs text-gray-400">Location</p>
                     <p className="text-sm font-semibold text-gray-700">{job.location}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 bg-teal-50 rounded-lg flex items-center justify-center">
+                    <Globe className="w-4 h-4 text-teal-600" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-400">Country</p>
+                    <p className="text-sm font-semibold text-gray-700">{job.country}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
