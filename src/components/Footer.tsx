@@ -43,17 +43,17 @@ export default function Footer() {
           <div>
             <h3 className="text-white font-semibold mb-4">Contact</h3>
             <ul className="space-y-3">
-              <li className="flex items-center gap-2 text-sm">
-                <MapPin className="w-4 h-4 text-blue-400 shrink-0" />
-                123 Career Street, Suite 100
+              <li className="flex items-start gap-2 text-sm">
+                <MapPin className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
+                <span>Bahrain World Trade Center, Level 28, Manama, Bahrain</span>
               </li>
               <li className="flex items-center gap-2 text-sm">
                 <Phone className="w-4 h-4 text-blue-400 shrink-0" />
-                (555) 123-4567
+                +973 1750 0000
               </li>
               <li className="flex items-center gap-2 text-sm">
                 <Mail className="w-4 h-4 text-blue-400 shrink-0" />
-                hello@jobboard.com
+                support@jobboard.bh
               </li>
             </ul>
           </div>
