@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { filterJobs, CATEGORIES, JOB_TYPES, COUNTRIES } from '../lib/data';
+import { filterJobs, CATEGORY_LIST, JOB_TYPES, COUNTRIES } from '../lib/data';
 import { Search, MapPin, Briefcase, X, SlidersHorizontal, Globe, Clock } from 'lucide-react';
 
 export default function JobsPage() {
@@ -10,6 +10,13 @@ export default function JobsPage() {
   const [country, setCountry] = useState(searchParams.get('country') || '');
   const [jobType, setJobType] = useState(searchParams.get('type') || '');
   const [showFilters, setShowFilters] = useState(false);
+  const [, setJobsVersion] = useState(0);
+
+  useEffect(() => {
+    const handler = () => setJobsVersion((v) => v + 1);
+    window.addEventListener('storage', handler);
+    return () => window.removeEventListener('storage', handler);
+  }, []);
 
   const jobs = filterJobs({
     q: searchParams.get('q') || undefined,
@@ -21,16 +28,14 @@ export default function JobsPage() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     const params = new URLSearchParams(searchParams);
-    if (search) params.set('q', search);
-    else params.delete('q');
+    if (search) params.set('q', search); else params.delete('q');
     setSearchParams(params);
   };
 
   const handleCategoryChange = (cat: string) => {
     const params = new URLSearchParams(searchParams);
     const newCat = cat === category ? '' : cat;
-    if (newCat) params.set('category', newCat);
-    else params.delete('category');
+    if (newCat) params.set('category', newCat); else params.delete('category');
     setCategory(newCat);
     setSearchParams(params);
   };
@@ -38,8 +43,7 @@ export default function JobsPage() {
   const handleCountryChange = (c: string) => {
     const params = new URLSearchParams(searchParams);
     const newCountry = c === country ? '' : c;
-    if (newCountry) params.set('country', newCountry);
-    else params.delete('country');
+    if (newCountry) params.set('country', newCountry); else params.delete('country');
     setCountry(newCountry);
     setSearchParams(params);
   };
@@ -47,17 +51,13 @@ export default function JobsPage() {
   const handleJobTypeChange = (t: string) => {
     const params = new URLSearchParams(searchParams);
     const newType = t === jobType ? '' : t;
-    if (newType) params.set('type', newType);
-    else params.delete('type');
+    if (newType) params.set('type', newType); else params.delete('type');
     setJobType(newType);
     setSearchParams(params);
   };
 
   const clearFilters = () => {
-    setSearch('');
-    setCategory('');
-    setCountry('');
-    setJobType('');
+    setSearch(''); setCategory(''); setCountry(''); setJobType('');
     setSearchParams({});
   };
 
@@ -73,70 +73,63 @@ export default function JobsPage() {
           <form onSubmit={handleSearch} className="mt-6 flex gap-3">
             <div className="relative flex-1">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <input
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search by title, company, or location..."
-                className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
-              />
+              <input type="text" value={search} onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search by title, company, location, or specialization..."
+                className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow" />
             </div>
-            <button type="submit" className="bg-blue-600 text-white px-6 py-3.5 rounded-xl font-semibold text-sm hover:bg-blue-700 transition-colors shrink-0">
-              Search
-            </button>
-            <button
-              type="button"
-              onClick={() => setShowFilters(!showFilters)}
-              className={`md:hidden p-3.5 rounded-xl border transition-colors ${
-                showFilters ? 'bg-blue-50 border-blue-200 text-blue-600' : 'bg-gray-50 border-gray-200 text-gray-500'
-              }`}
-            >
+            <button type="submit" className="bg-blue-600 text-white px-6 py-3.5 rounded-xl font-semibold text-sm hover:bg-blue-700 transition-colors shrink-0">Search</button>
+            <button type="button" onClick={() => setShowFilters(!showFilters)}
+              className={`md:hidden p-3.5 rounded-xl border transition-colors ${showFilters ? 'bg-blue-50 border-blue-200 text-blue-600' : 'bg-gray-50 border-gray-200 text-gray-500'}`}>
               <SlidersHorizontal className="w-5 h-5" />
             </button>
           </form>
 
           <div className={`mt-5 ${showFilters ? 'block' : 'hidden'} md:block space-y-4`}>
+            {/* Category */}
             <div>
               <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Category</p>
               <div className="flex flex-wrap items-center gap-2">
-                {CATEGORIES.map((cat) => (
+                {CATEGORY_LIST.map((cat) => (
                   <button key={cat} onClick={() => handleCategoryChange(cat)}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${category === cat ? 'bg-blue-600 text-white' : 'bg-gray-50 text-gray-600 hover:bg-gray-100 border border-gray-200'}`}>
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${category === cat ? 'bg-blue-600 text-white' : 'bg-gray-50 text-gray-600 hover:bg-gray-100 border border-gray-200'}`}>
                     {cat}
                   </button>
                 ))}
               </div>
             </div>
+
+            {/* Job Type */}
             <div>
               <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Job Type</p>
               <div className="flex flex-wrap items-center gap-2">
                 {JOB_TYPES.map((t) => (
                   <button key={t} onClick={() => handleJobTypeChange(t)}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${jobType === t ? 'bg-blue-600 text-white' : 'bg-gray-50 text-gray-600 hover:bg-gray-100 border border-gray-200'}`}>
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${jobType === t ? 'bg-blue-600 text-white' : 'bg-gray-50 text-gray-600 hover:bg-gray-100 border border-gray-200'}`}>
                     {t}
                   </button>
                 ))}
               </div>
             </div>
+
+            {/* Country */}
             <div>
               <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Country</p>
               <div className="flex flex-wrap items-center gap-2">
-                {COUNTRIES.slice(0, 12).map((c) => (
+                {COUNTRIES.slice(0, 10).map((c) => (
                   <button key={c} onClick={() => handleCountryChange(c)}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${country === c ? 'bg-blue-600 text-white' : 'bg-gray-50 text-gray-600 hover:bg-gray-100 border border-gray-200'}`}>
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${country === c ? 'bg-blue-600 text-white' : 'bg-gray-50 text-gray-600 hover:bg-gray-100 border border-gray-200'}`}>
                     {c}
                   </button>
                 ))}
-                <select
-                  value={country && !COUNTRIES.slice(0, 12).includes(country as any) ? country : ''}
+                <select value={country && !COUNTRIES.slice(0, 10).includes(country) ? country : ''}
                   onChange={(e) => { if (e.target.value) handleCountryChange(e.target.value); }}
-                  className="px-4 py-2 rounded-lg text-sm font-medium bg-gray-50 text-gray-600 hover:bg-gray-100 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
+                  className="px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-50 text-gray-600 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
                   <option value="">More countries...</option>
-                  {COUNTRIES.slice(12).map((c) => (<option key={c} value={c}>{c}</option>))}
+                  {COUNTRIES.slice(10).map((c) => (<option key={c} value={c}>{c}</option>))}
                 </select>
               </div>
             </div>
+
             {hasFilters && (
               <button onClick={clearFilters} className="inline-flex items-center gap-1 px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors">
                 <X className="w-4 h-4" /> Clear all filters
@@ -172,6 +165,7 @@ export default function JobsPage() {
                       <span className="inline-flex items-center gap-1"><Globe className="w-3.5 h-3.5" />{job.country}</span>
                       <span className="w-1 h-1 bg-gray-300 rounded-full" />
                       <span>{job.category}</span>
+                      {job.subcategory && <><span className="w-1 h-1 bg-gray-300 rounded-full" /><span>{job.subcategory}</span></>}
                       <span className="w-1 h-1 bg-gray-300 rounded-full" />
                       <span className="inline-flex items-center gap-1"><Clock className="w-3.5 h-3.5" />{job.type}</span>
                     </div>

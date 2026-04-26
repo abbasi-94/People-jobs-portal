@@ -5,6 +5,7 @@ import JobsPage from './pages/JobsPage';
 import JobDetailPage from './pages/JobDetailPage';
 import PostJobPage from './pages/PostJobPage';
 import ContactPage from './pages/ContactPage';
+import AdminPage from './pages/AdminPage';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/post-job" element={<PostJobPage />} />
           <Route path="/contact" element={<ContactPage />} />
         </Route>
+        <Route path="/admin" element={<AdminPage />} />
       </Routes>
     </BrowserRouter>
   );

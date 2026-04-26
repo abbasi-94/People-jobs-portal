@@ -1,34 +1,40 @@
 import { Link } from 'react-router-dom';
-import { JOBS, CATEGORIES } from '../lib/data';
+import { getJobs, CATEGORY_LIST } from '../lib/data';
 import {
-  Search,
-  ArrowRight,
-  TrendingUp,
-  Users,
-  Building2,
-  Globe,
-  Code,
-  BarChart3,
-  Megaphone,
-  GraduationCap,
-  HeartPulse,
-  Wrench,
+  Search, ArrowRight, TrendingUp, Users, Building2, Globe,
+  Monitor, Wrench, HeartPulse, GraduationCap, Briefcase, Megaphone,
+  Newspaper, Scale, Home, Truck, Utensils, Factory, Sprout, Landmark,
+  HandHeart, Palette, FlaskConical, Headphones, UserCog, ShoppingCart,
   MapPin,
 } from 'lucide-react';
 
 const categoryIcons: Record<string, React.ReactNode> = {
-  IT: <Code className="w-6 h-6" />,
-  Sales: <BarChart3 className="w-6 h-6" />,
-  Marketing: <Megaphone className="w-6 h-6" />,
-  Teaching: <GraduationCap className="w-6 h-6" />,
-  Healthcare: <HeartPulse className="w-6 h-6" />,
-  Engineering: <Wrench className="w-6 h-6" />,
+  'Information Technology': <Monitor className="w-6 h-6" />,
+  'Engineering': <Wrench className="w-6 h-6" />,
+  'Healthcare & Medical': <HeartPulse className="w-6 h-6" />,
+  'Education & Teaching': <GraduationCap className="w-6 h-6" />,
+  'Business & Finance': <Briefcase className="w-6 h-6" />,
+  'Sales & Marketing': <Megaphone className="w-6 h-6" />,
+  'Media & Communications': <Newspaper className="w-6 h-6" />,
+  'Legal & Law': <Scale className="w-6 h-6" />,
+  'Construction & Real Estate': <Home className="w-6 h-6" />,
+  'Transportation & Logistics': <Truck className="w-6 h-6" />,
+  'Hospitality & Tourism': <Utensils className="w-6 h-6" />,
+  'Manufacturing & Production': <Factory className="w-6 h-6" />,
+  'Agriculture & Farming': <Sprout className="w-6 h-6" />,
+  'Government & Public Sector': <Landmark className="w-6 h-6" />,
+  'Social Work & NGO': <HandHeart className="w-6 h-6" />,
+  'Arts & Design': <Palette className="w-6 h-6" />,
+  'Science & Research': <FlaskConical className="w-6 h-6" />,
+  'Customer Service': <Headphones className="w-6 h-6" />,
+  'Human Resources': <UserCog className="w-6 h-6" />,
+  'Retail & E-commerce': <ShoppingCart className="w-6 h-6" />,
 };
 
-const featuredJobs = JOBS.filter((j) => j.is_active).slice(0, 6);
-const jobCount = JOBS.filter((j) => j.is_active).length;
-
 export default function HomePage() {
+  const featuredJobs = getJobs().filter((j) => j.is_active).slice(0, 6);
+  const jobCount = getJobs().filter((j) => j.is_active).length;
+
   return (
     <div>
       {/* Hero */}
@@ -48,22 +54,14 @@ export default function HomePage() {
               <span className="text-blue-200">Dream Job</span>
             </h1>
             <p className="text-lg text-blue-100 mb-10 max-w-xl leading-relaxed">
-              Discover opportunities across the globe that match your skills and passion. Connect with top employers and take the next step in your career.
+              Discover opportunities across 20+ industries and 80+ countries. Connect with top employers and take the next step in your career.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link
-                to="/jobs"
-                className="inline-flex items-center justify-center gap-2 bg-white text-blue-700 px-8 py-4 rounded-xl font-semibold hover:bg-blue-50 transition-colors shadow-lg shadow-blue-900/20"
-              >
-                <Search className="w-5 h-5" />
-                Browse Jobs
+              <Link to="/jobs" className="inline-flex items-center justify-center gap-2 bg-white text-blue-700 px-8 py-4 rounded-xl font-semibold hover:bg-blue-50 transition-colors shadow-lg shadow-blue-900/20">
+                <Search className="w-5 h-5" /> Browse Jobs
               </Link>
-              <Link
-                to="/post-job"
-                className="inline-flex items-center justify-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white px-8 py-4 rounded-xl font-semibold hover:bg-white/20 transition-colors"
-              >
-                Post a Job
-                <ArrowRight className="w-5 h-5" />
+              <Link to="/post-job" className="inline-flex items-center justify-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white px-8 py-4 rounded-xl font-semibold hover:bg-white/20 transition-colors">
+                Post a Job <ArrowRight className="w-5 h-5" />
               </Link>
             </div>
           </div>
@@ -77,13 +75,11 @@ export default function HomePage() {
             {[
               { icon: <Building2 className="w-5 h-5" />, value: '500+', label: 'Companies' },
               { icon: <Users className="w-5 h-5" />, value: '10K+', label: 'Job Seekers' },
-              { icon: <Globe className="w-5 h-5" />, value: '50+', label: 'Countries' },
-              { icon: <TrendingUp className="w-5 h-5" />, value: '95%', label: 'Success Rate' },
+              { icon: <Globe className="w-5 h-5" />, value: '80+', label: 'Countries' },
+              { icon: <TrendingUp className="w-5 h-5" />, value: '20+', label: 'Industries' },
             ].map((stat) => (
               <div key={stat.label} className="text-center">
-                <div className="inline-flex items-center justify-center w-10 h-10 bg-blue-50 text-blue-600 rounded-lg mb-3">
-                  {stat.icon}
-                </div>
+                <div className="inline-flex items-center justify-center w-10 h-10 bg-blue-50 text-blue-600 rounded-lg mb-3">{stat.icon}</div>
                 <div className="text-2xl font-bold text-gray-900">{stat.value}</div>
                 <div className="text-sm text-gray-500 mt-1">{stat.label}</div>
               </div>
@@ -96,20 +92,17 @@ export default function HomePage() {
       <section className="bg-gray-50 py-16 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-3">Browse by Category</h2>
-            <p className="text-gray-500 max-w-lg mx-auto">Explore opportunities across the industries that matter most to you</p>
+            <h2 className="text-3xl font-bold text-gray-900 mb-3">Browse by Industry</h2>
+            <p className="text-gray-500 max-w-lg mx-auto">Explore opportunities across 20+ industries and hundreds of specializations</p>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {CATEGORIES.map((cat) => (
-              <Link
-                key={cat}
-                to={`/jobs?category=${cat}`}
-                className="group bg-white rounded-xl p-6 text-center border border-gray-100 hover:border-blue-200 hover:shadow-lg hover:shadow-blue-50 transition-all duration-200"
-              >
-                <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-50 text-blue-600 rounded-xl mb-3 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                  {categoryIcons[cat]}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+            {CATEGORY_LIST.map((cat) => (
+              <Link key={cat} to={`/jobs?category=${encodeURIComponent(cat)}`}
+                className="group bg-white rounded-xl p-4 text-center border border-gray-100 hover:border-blue-200 hover:shadow-lg hover:shadow-blue-50 transition-all duration-200">
+                <div className="inline-flex items-center justify-center w-10 h-10 bg-blue-50 text-blue-600 rounded-lg mb-2 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                  {categoryIcons[cat] || <Briefcase className="w-6 h-6" />}
                 </div>
-                <h3 className="font-semibold text-gray-900 text-sm">{cat}</h3>
+                <h3 className="font-medium text-gray-900 text-xs leading-tight">{cat}</h3>
               </Link>
             ))}
           </div>
@@ -124,46 +117,30 @@ export default function HomePage() {
               <h2 className="text-3xl font-bold text-gray-900 mb-2">Featured Jobs</h2>
               <p className="text-gray-500">Latest opportunities from employers around the world</p>
             </div>
-            <Link
-              to="/jobs"
-              className="hidden sm:inline-flex items-center gap-1 text-blue-600 font-semibold text-sm hover:text-blue-700 transition-colors"
-            >
+            <Link to="/jobs" className="hidden sm:inline-flex items-center gap-1 text-blue-600 font-semibold text-sm hover:text-blue-700 transition-colors">
               View all jobs <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
-
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {featuredJobs.map((job) => (
-              <Link
-                key={job.id}
-                to={`/jobs/${job.id}`}
-                className="group bg-white rounded-xl border border-gray-100 p-6 hover:border-blue-200 hover:shadow-lg hover:shadow-blue-50 transition-all duration-200"
-              >
+              <Link key={job.id} to={`/jobs/${job.id}`}
+                className="group bg-white rounded-xl border border-gray-100 p-6 hover:border-blue-200 hover:shadow-lg hover:shadow-blue-50 transition-all duration-200">
                 <div className="flex items-start justify-between mb-4">
                   <div className="w-11 h-11 bg-blue-50 rounded-lg flex items-center justify-center text-blue-600 font-bold text-sm">
                     {job.company.slice(0, 2).toUpperCase()}
                   </div>
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700">
-                    {job.type}
-                  </span>
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700">{job.type}</span>
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors">
-                  {job.title}
-                </h3>
+                <h3 className="font-semibold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors">{job.title}</h3>
                 <p className="text-sm text-gray-500 mb-3">{job.company}</p>
                 <div className="flex flex-wrap items-center gap-2 text-xs text-gray-400">
-                  <span className="inline-flex items-center gap-1">
-                    <MapPin className="w-3 h-3" />
-                    {job.location}
-                  </span>
+                  <span className="inline-flex items-center gap-1"><MapPin className="w-3 h-3" />{job.location}</span>
                   <span className="w-1 h-1 bg-gray-300 rounded-full" />
-                  <span className="inline-flex items-center gap-1">
-                    <Globe className="w-3 h-3" />
-                    {job.country}
-                  </span>
+                  <span className="inline-flex items-center gap-1"><Globe className="w-3 h-3" />{job.country}</span>
                 </div>
                 <div className="flex items-center gap-2 mt-2 text-xs text-gray-400">
                   <span>{job.category}</span>
+                  {job.subcategory && <><span className="w-1 h-1 bg-gray-300 rounded-full" /><span>{job.subcategory}</span></>}
                 </div>
                 {job.salary_max > 0 && (
                   <div className="mt-4 pt-4 border-t border-gray-50 text-sm font-semibold text-gray-700">
@@ -173,12 +150,8 @@ export default function HomePage() {
               </Link>
             ))}
           </div>
-
           <div className="mt-8 text-center sm:hidden">
-            <Link
-              to="/jobs"
-              className="inline-flex items-center gap-1 text-blue-600 font-semibold text-sm hover:text-blue-700"
-            >
+            <Link to="/jobs" className="inline-flex items-center gap-1 text-blue-600 font-semibold text-sm hover:text-blue-700">
               View all jobs <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
@@ -188,18 +161,12 @@ export default function HomePage() {
       {/* CTA */}
       <section className="bg-blue-600 py-16 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Ready to hire top talent?
-          </h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Ready to hire top talent?</h2>
           <p className="text-blue-100 max-w-lg mx-auto mb-8 leading-relaxed">
             Post your job listing and reach thousands of qualified professionals worldwide.
           </p>
-          <Link
-            to="/post-job"
-            className="inline-flex items-center gap-2 bg-white text-blue-700 px-8 py-4 rounded-xl font-semibold hover:bg-blue-50 transition-colors shadow-lg"
-          >
-            Post a Job Now
-            <ArrowRight className="w-5 h-5" />
+          <Link to="/post-job" className="inline-flex items-center gap-2 bg-white text-blue-700 px-8 py-4 rounded-xl font-semibold hover:bg-blue-50 transition-colors shadow-lg">
+            Post a Job Now <ArrowRight className="w-5 h-5" />
           </Link>
         </div>
       </section>

@@ -1,17 +1,6 @@
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { getJobById } from '../lib/data';
-import {
-  ArrowLeft,
-  MapPin,
-  Briefcase,
-  Building2,
-  Clock,
-  DollarSign,
-  Mail,
-  Share2,
-  CheckCircle2,
-  Globe,
-} from 'lucide-react';
+import { ArrowLeft, MapPin, Briefcase, Building2, Clock, DollarSign, Mail, Share2, CheckCircle2, Globe, Tag } from 'lucide-react';
 
 export default function JobDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -47,7 +36,7 @@ export default function JobDetailPage() {
                 <span className="inline-flex items-center gap-1.5"><MapPin className="w-4 h-4 text-gray-400" />{job.location}</span>
                 <span className="inline-flex items-center gap-1.5"><Globe className="w-4 h-4 text-gray-400" />{job.country}</span>
                 <span className="inline-flex items-center gap-1.5"><Briefcase className="w-4 h-4 text-gray-400" />{job.type}</span>
-                <span className="inline-flex items-center gap-1.5"><Building2 className="w-4 h-4 text-gray-400" />{job.category}</span>
+                <span className="inline-flex items-center gap-1.5"><Tag className="w-4 h-4 text-gray-400" />{job.category}{job.subcategory ? ` / ${job.subcategory}` : ''}</span>
                 <span className="inline-flex items-center gap-1.5"><Clock className="w-4 h-4 text-gray-400" />Posted {new Date(job.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
               </div>
             </div>
@@ -68,8 +57,7 @@ export default function JobDetailPage() {
                 <ul className="space-y-2.5">
                   {job.requirements.split(',').map((req, i) => (
                     <li key={i} className="flex items-start gap-2.5 text-sm text-gray-600">
-                      <CheckCircle2 className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" />
-                      {req.trim()}
+                      <CheckCircle2 className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" />{req.trim()}
                     </li>
                   ))}
                 </ul>
@@ -106,9 +94,15 @@ export default function JobDetailPage() {
                   <div><p className="text-xs text-gray-400">Country</p><p className="text-sm font-semibold text-gray-700">{job.country}</p></div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 bg-amber-50 rounded-lg flex items-center justify-center"><Building2 className="w-4 h-4 text-amber-600" /></div>
+                  <div className="w-9 h-9 bg-amber-50 rounded-lg flex items-center justify-center"><Tag className="w-4 h-4 text-amber-600" /></div>
                   <div><p className="text-xs text-gray-400">Category</p><p className="text-sm font-semibold text-gray-700">{job.category}</p></div>
                 </div>
+                {job.subcategory && (
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 bg-rose-50 rounded-lg flex items-center justify-center"><Building2 className="w-4 h-4 text-rose-600" /></div>
+                    <div><p className="text-xs text-gray-400">Specialization</p><p className="text-sm font-semibold text-gray-700">{job.subcategory}</p></div>
+                  </div>
+                )}
               </div>
             </div>
 

@@ -1,32 +1,18 @@
 import { useState } from 'react';
+import { saveMessage } from '../lib/data';
 import { Mail, MapPin, Phone, CheckCircle, Send, Clock, MessageSquare, ChevronDown, Globe, Building2 } from 'lucide-react';
 
 const faqs = [
-  {
-    q: 'How do I apply for a job listed on JobBoard?',
-    a: 'Click on any job listing to view the full details. Each job includes application instructions in the "How to Apply" section. Most employers accept applications via email or through their company website.',
-  },
-  {
-    q: 'Is it free to post a job on JobBoard?',
-    a: 'Yes, posting a job on JobBoard is completely free. Simply navigate to the "Post a Job" page, fill in the job details, and your listing will be submitted for review.',
-  },
-  {
-    q: 'How can I search for jobs in a specific country?',
-    a: 'Use the country and category filters on the Find Jobs page to narrow down results. We cover opportunities across the Middle East and over 20 countries worldwide.',
-  },
-  {
-    q: 'How can I report a suspicious job listing?',
-    a: 'Use our contact form below with the subject "Report a Listing" and include the job title and company name. We review all reports within 24 hours.',
-  },
-  {
-    q: 'Do you offer recruitment services for companies?',
-    a: 'We offer premium recruitment solutions for businesses looking to hire at scale. Contact our team using the form below with "Recruitment Services" in the subject.',
-  },
+  { q: 'How do I apply for a job listed on JobBoard?', a: 'Click on any job listing to view the full details. Each job includes application instructions in the "How to Apply" section.' },
+  { q: 'Is it free to post a job on JobBoard?', a: 'Yes, posting a job on JobBoard is completely free. Navigate to "Post a Job", fill in the details, and your listing goes live immediately.' },
+  { q: 'How can I search for jobs in a specific country?', a: 'Use the country and category filters on the Find Jobs page. We cover opportunities across 80+ countries worldwide.' },
+  { q: 'How can I report a suspicious job listing?', a: 'Use the contact form below with the subject "Report a Listing" and include the job title and company name. We review all reports within 24 hours.' },
+  { q: 'Do you offer recruitment services for companies?', a: 'We offer premium recruitment solutions for businesses looking to hire at scale. Contact our team with "Recruitment Services" in the subject.' },
 ];
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
-  const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
+  const [form, setForm] = useState({ name: '', email: '', phone: '', subject: '', message: '' });
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -35,6 +21,7 @@ export default function ContactPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    saveMessage(form);
     setSubmitted(true);
   };
 
@@ -47,7 +34,7 @@ export default function ContactPage() {
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-3">Message Sent Successfully</h2>
           <p className="text-gray-500 mb-8 leading-relaxed">Thank you for reaching out. Our team will review your message and respond within 24 hours.</p>
-          <button onClick={() => { setSubmitted(false); setForm({ name: '', email: '', subject: '', message: '' }); }}
+          <button onClick={() => { setSubmitted(false); setForm({ name: '', email: '', phone: '', subject: '', message: '' }); }}
             className="bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold text-sm hover:bg-blue-700 transition-colors">
             Send Another Message
           </button>
@@ -83,13 +70,8 @@ export default function ContactPage() {
           <div className="lg:col-span-2 space-y-4">
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
               <div className="flex items-start gap-4 mb-6">
-                <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 shrink-0">
-                  <Building2 className="w-6 h-6" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900">Head Office</h3>
-                  <p className="text-sm text-gray-500 mt-0.5">JobBoard FZE</p>
-                </div>
+                <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 shrink-0"><Building2 className="w-6 h-6" /></div>
+                <div><h3 className="font-semibold text-gray-900">Head Office</h3><p className="text-sm text-gray-500 mt-0.5">JobBoard FZE</p></div>
               </div>
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
@@ -119,12 +101,8 @@ export default function ContactPage() {
               <div className="space-y-2.5">
                 {[
                   { day: 'Sunday', hours: '8:00 AM - 1:00 PM' },
-                  { day: 'Monday', hours: '8:00 AM - 5:00 PM' },
-                  { day: 'Tuesday', hours: '8:00 AM - 5:00 PM' },
-                  { day: 'Wednesday', hours: '8:00 AM - 5:00 PM' },
-                  { day: 'Thursday', hours: '8:00 AM - 5:00 PM' },
-                  { day: 'Friday', hours: 'Closed' },
-                  { day: 'Saturday', hours: 'Closed' },
+                  { day: 'Monday - Thursday', hours: '8:00 AM - 5:00 PM' },
+                  { day: 'Friday - Saturday', hours: 'Closed' },
                 ].map((row) => (
                   <div key={row.day} className="flex items-center justify-between text-sm">
                     <span className="text-gray-600">{row.day}</span>
@@ -152,32 +130,42 @@ export default function ContactPage() {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">Full Name *</label>
                   <input type="text" name="name" value={form.name} onChange={handleChange} required placeholder="e.g. Ahmed Al Khalifa"
-                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow" />
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">Email Address *</label>
                   <input type="email" name="email" value={form.email} onChange={handleChange} required placeholder="e.g. ahmed@example.com"
-                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow" />
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">Subject *</label>
-                <select name="subject" value={form.subject} onChange={handleChange} required
-                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow appearance-none">
-                  <option value="">Select a topic</option>
-                  <option value="General Inquiry">General Inquiry</option>
-                  <option value="Job Listing Support">Job Listing Support</option>
-                  <option value="Report a Listing">Report a Listing</option>
-                  <option value="Recruitment Services">Recruitment Services</option>
-                  <option value="Partnership Opportunity">Partnership Opportunity</option>
-                  <option value="Technical Issue">Technical Issue</option>
-                  <option value="Other">Other</option>
-                </select>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Phone Number *</label>
+                  <div className="relative">
+                    <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <input type="tel" name="phone" value={form.phone} onChange={handleChange} required placeholder="e.g. +973 1234 5678"
+                      className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Subject *</label>
+                  <select name="subject" value={form.subject} onChange={handleChange} required
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none">
+                    <option value="">Select a topic</option>
+                    <option value="General Inquiry">General Inquiry</option>
+                    <option value="Job Listing Support">Job Listing Support</option>
+                    <option value="Report a Listing">Report a Listing</option>
+                    <option value="Recruitment Services">Recruitment Services</option>
+                    <option value="Partnership Opportunity">Partnership Opportunity</option>
+                    <option value="Technical Issue">Technical Issue</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1.5">Message *</label>
                 <textarea name="message" value={form.message} onChange={handleChange} required rows={6} placeholder="Tell us how we can help..."
-                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none transition-shadow" />
+                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none" />
               </div>
               <div className="flex items-center justify-between pt-2">
                 <p className="text-xs text-gray-400">All fields marked with * are required</p>
