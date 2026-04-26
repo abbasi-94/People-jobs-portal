@@ -8,6 +8,7 @@ import {
   ArrowLeft,
   Globe,
   MapPin,
+  Clock,
   DollarSign,
   Building2,
   Mail,
