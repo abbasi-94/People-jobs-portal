@@ -1,7 +1,5 @@
 import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { supabase } from '../lib/supabase';
-import { Job, CATEGORIES } from '../lib/types';
+import { JOBS, CATEGORIES } from '../lib/data';
 import {
   Search,
   ArrowRight,
@@ -27,22 +25,10 @@ const categoryIcons: Record<string, React.ReactNode> = {
   Engineering: <Wrench className="w-6 h-6" />,
 };
 
+const featuredJobs = JOBS.filter((j) => j.is_active).slice(0, 6);
+const jobCount = JOBS.filter((j) => j.is_active).length;
+
 export default function HomePage() {
-  const [featuredJobs, setFeaturedJobs] = useState<Job[]>([]);
-  const [jobCount, setJobCount] = useState(0);
-
-  useEffect(() => {
-    async function loadData() {
-      const [jobsRes, countRes] = await Promise.all([
-        supabase.from('jobs').select('*').eq('is_active', true).order('created_at', { ascending: false }).limit(6),
-        supabase.from('jobs').select('*', { count: 'exact', head: true }).eq('is_active', true),
-      ]);
-      if (jobsRes.data) setFeaturedJobs(jobsRes.data);
-      if (countRes.count !== null) setJobCount(countRes.count);
-    }
-    loadData();
-  }, []);
-
   return (
     <div>
       {/* Hero */}
