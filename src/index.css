@@ -12,20 +12,4 @@
   body {
     @apply text-gray-900 bg-white;
   }
-
-  .dark body,
-  .dark {
-    @apply text-gray-100 bg-gray-950;
-  }
-}
-
-@layer utilities {
-  @keyframes slide-in {
-    from { transform: translateX(100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-  }
-
-  .animate-slide-in {
-    animation: slide-in 0.3s ease-out;
-  }
 }
